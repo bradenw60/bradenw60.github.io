@@ -46095,7 +46095,6 @@ a.u-link.u-text-hover-color-var:hover {
 
 .u-header .u-nav-1 {
   font-size: 1rem;
-  letter-spacing: normal;
 }
 
 .u-header .u-nav-2 {
@@ -46111,6 +46110,10 @@ a.u-link.u-text-hover-color-var:hover {
     margin-top: -36px;
     margin-right: -4px;
   }
+
+  .u-header .u-nav-1 {
+    letter-spacing: normal;
+  }
 }
 
 
@@ -46121,11 +46124,6 @@ a.u-link.u-text-hover-color-var:hover {
 
 .u-footer .u-sheet-1 {
   min-height: 280px;
-}
-
-.u-footer .u-text-1 {
-  margin-bottom: 60px;
-  margin-top: 180px;
 }
 @media (max-width: 1199px) {
   .u-footer .u-sheet-1 {
