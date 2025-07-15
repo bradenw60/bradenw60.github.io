@@ -1,56 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tailwind Website</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-gray-100 text-gray-800 font-sans">
-    <!-- Header -->
-    <header class="bg-white shadow-md p-6">
-      <div class="container mx-auto flex justify-between items-center">
-        <h1 class="text-2xl font-bold">My Tailwind Site</h1>
-        <nav class="space-x-4">
-          <a href="#" class="text-blue-600 hover:underline">Home</a>
-          <a href="#" class="text-blue-600 hover:underline">About</a>
-          <a href="#" class="text-blue-600 hover:underline">Contact</a>
-        </nav>
-      </div>
-    </header>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Braden Williams - GIS Portfolio</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-gray-100 text-gray-800 font-sans">
+        <!-- Header -->
+        <header class="bg-white shadow-md p-6">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold">Braden Williams</h1>
+                <nav class="space-x-4">
+                    <a href="#about" class="text-blue-600 hover:underline">About</a>
+                    <a href="#projects" class="text-blue-600 hover:underline">Projects</a>
+                    <a href="#contact" class="text-blue-600 hover:underline">Contact</a>
+                </nav>
+            </div>
+        </header>
 
-    <!-- Hero Section -->
-    <section class="bg-cover bg-center py-20" style="background-image: url('plane.jpeg');">
-      <div class="container mx-auto text-center text-white"></div>
-        <h2 class="text-4xl font-bold mb-4">Welcome to My Website</h2>
-        <p class="text-lg mb-6">Built with Tailwind CSS for speed and style.</p>
-        <a href="#" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">Get Started</a>
-      </div>
-    </section>
+        <!-- Hero Section -->
+        <section class="bg-gray-100 py-20">
+            <div class="container mx-auto flex items-center">
+                <div class="text-center text-gray-800 flex-1">
+                    <h2 class="text-4xl font-bold mb-4">Braden Williams</h2>
+                    <p class="text-lg mb-6">GIS Professional | Spatial Analyst | Cartographer</p>
+                    <a href="#projects" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">View My Work</a>
+                </div>
+                <div class="flex-1">
+                    <img src="plane.jpeg" alt="GIS Map Example" class="rounded-lg shadow-lg mx-auto">
+                </div>
+            </div>
+        </section>
 
-    <!-- Features Section -->
-    <section class="py-16">
-      <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-        <div class="bg-white p-6 rounded-lg shadow">
-          <h3 class="text-xl font-semibold mb-2">Fast Setup</h3>
-          <p>Get up and running quickly with Tailwind.</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow">
-          <h3 class="text-xl font-semibold mb-2">Utility First</h3>
-          <p>Design directly in your markup using utility classes.</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow">
-          <h3 class="text-xl font-semibold mb-2">Responsive</h3>
-          <p>Mobile-first, responsive design out of the box.</p>
-        </div>
-      </div>
-    </section>
+        <!-- About Section -->
+        <section id="about" class="bg-white py-16">
+            <div class="container mx-auto text-center">
+                <h3 class="text-3xl font-bold mb-6">About Me</h3>
+                <p class="text-lg text-gray-700">
+                    I'm a GIS technician and recent graduate of the Advanced Diploma in Geographic Information Systems at BCIT, with hands-on experience supporting infrastructure and asset management projects. During my practicum with the City of Richmond’s Engineering & Public Works department, I worked extensively with ArcGIS Pro, ArcMap, and Infor Public Sector to update and maintain municipal utility datasets, including stormwater, sanitary, water, and street lighting systems. I bring a strong foundation in spatial analysis, data cleaning, and QA/QC, along with technical skills in SQL, Python, and cartographic design. With a background in English Literature from UBC and several years of experience in music instruction and customer-facing roles, I combine analytical thinking with communication and creative problem-solving. I'm particularly interested in using GIS to support sustainable planning, infrastructure improvement, and public engagement.
+                </p>
+            </div>
+        </section>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t py-6">
-      <div class="container mx-auto text-center text-sm text-gray-500">
-        &copy; 2025 My Tailwind Site. All rights reserved.
-      </div>
-    </footer>
-  </body>
+        <!-- Richmond Section -->
+        <section id="about" class="bg-white py-16">
+            <div class="container mx-auto flex items-center">
+            <div class="flex-1 text-gray-700">
+                <h3 class="text-4xl font-bold mb-6">City of Richmond</h3>
+                <p class="text-2xl"></p>
+                <p class="text-2xl text-gray-700"></p>
+                    From April to June 2025, I worked as a GIS Intern with the Engineering & Public Works department at the City of Richmond, BC. In this role, I managed and updated municipal infrastructure data using ArcMap, ArcGIS Pro, and Infor Public Sector. My work focused on data input, migration, and cleaning for utility asset datasets, including stormwater, sewer, water, and street lighting systems. I conducted thorough QA/QC checks to ensure the accuracy and topological integrity of spatial data. Additionally, I worked with municipal GIS systems to align spatial records with engineering requirements, supporting capital project planning and asset management. This role also involved close collaboration with city staff to resolve data inconsistencies and improve the overall quality of the infrastructure database.
+                </p>
+                </p>
+            </div>
+            <div class="flex-1">
+                <img src="richmondposter.jpg" alt="City of Richmond GIS Work" class="rounded-lg shadow-lg mx-auto">
+            </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-16 bg-gray-100">
+            <div class="container mx-auto">
+            <h3 class="text-3xl font-bold text-center mb-8">My Projects</h3>
+            <div class="space-y-12">
+                <!-- Project 1 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
+                <img src="rainguages.png" alt="Urban Planning Map" class="w-full max-w-3xl rounded-lg shadow-lg mb-6">
+                <h4 class="text-2xl font-semibold mb-4">Richmond Rain Guages</h4>
+                <p class="text-gray-700 text-lg text-center">Responded to map requests from the Engineering department at the City of Richmond
+                </div>
+               
+                <!-- Project 2 -->
+                <div class="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
+                <img src="transit.png" alt="Transportation Network Map" class="w-full max-w-3xl rounded-lg shadow-lg mb-6">
+                <h4 class="text-2xl font-semibold mb-4">Transportation Network Mapping</h4>
+                <p class="text-gray-700 text-lg text-center">The data that has been collected for this project is all open-source information. The
+                    sources come from the City of Vancouver Open Data Portal for the Transit lines,
+                    OpenStreetMap for the restaurants that are open later than 1am, and ESA WorldCover website
+                    for the land use raster. QGIS was used to query and display the data.
+                    The transit dataset was downloaded from the Abacus Library at UBC as a
+                    shapefile (www.abacus.library.ubc.ca). 
+                    For the restaurants open later than 1am, The data comes from 
+                    www.overpass-turbo.eu. This information is supplied through volunteer efforts.
+                    The land use data was taken from ESA WorldCover and is Sentinel-2 satellite data taken
+                    at 10m resolution in 2021. </p>
+                </div>
+            </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="bg-white py-16">
+            <div class="container mx-auto text-center">
+            <h3 class="text-3xl font-bold mb-6">Contact Me</h3>
+            <p class="text-lg text-gray-700 mb-6">Interested in working together? Feel free to reach out:</p>
+            <div class="space-x-4">
+                <a href="mailto:bradenw60@gmail.com" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">Email Me</a>
+                <a href="https://www.linkedin.com/in/braden-williams-124b18305" target="_blank" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">LinkedIn</a>
+            </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t py-6">
+            <div class="container mx-auto text-center text-sm text-gray-500">
+                &copy; 2025 Braden Williams. All rights reserved.
+            </div>
+        </footer>
+    </body>
 </html>
