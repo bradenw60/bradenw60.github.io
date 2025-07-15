@@ -97,6 +97,7 @@
   }
 
   .u-section-1 .u-text-3 {
+    margin-top: 20px;
     margin-right: calc(((100% - 940px) / 2)  + 204px);
     margin-left: calc(((100% - 940px) / 2));
   }
@@ -204,6 +205,7 @@
   }
 } .u-section-2 {
   min-height: 1416px;
+  background-image: url("images/default-image.jpg");
 }
 
 .u-section-2 .u-image-1 {
