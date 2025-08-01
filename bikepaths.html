@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vancouver Bike Paths - Braden Williams</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans">
+
+  <!-- Header -->
+  <header class="bg-white shadow p-6">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Braden Williams</h1>
+      <nav>
+        <a href="index.html" class="text-blue-600 hover:underline">Back to Portfolio</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="py-16 px-4 max-w-4xl mx-auto">
+    <h2 class="text-3xl font-bold mb-6 text-center">Vancouver Bike Paths</h2>
+
+    <img src="BikePathsExport_page-0001.jpg" alt="Vancouver Bike Paths Map" class="rounded-lg shadow-lg mb-6 w-full max-w-3xl mx-auto">
+
+    <p class="text-lg text-gray-700 text-center max-w-2xl mx-auto">
+      This map illustrates the development of bike infrastructure in Vancouver 
+      before and after the year 2000. Using QGIS, my workflow involved first 
+    gathering data from the <a href="https://opendata.vancouver.ca/explore/dataset/bikeways/information/?disjunctive.year_of_construction&disjunctive.bike_route_name&disjunctive.bikeway_type&disjunctive.subtype" class="text-blue-600 hover:underline" target="_blank">Vancouver Open Data Portal</a>. Using the bikeways 
+      dataset, I then queried and symbolized to split the installation date by the year 2000. 
+      My analysis shows that there is a visible increase in bike paths built after 2000.  
+      The map highlights the city's efforts to expand its cycling network.
+    </p>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t mt-12 py-6 text-center text-sm text-gray-500">
+    &copy; 2025 Braden Williams. All rights reserved.
+  </footer>
+
+</body>
+</html>
