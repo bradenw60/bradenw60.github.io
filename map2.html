@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title></title>
+<title>map2</title>
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 <base target="_blank">
 <link rel="stylesheet" type="text/css" href="./Qgis2threejs.css">
@@ -16,6 +16,7 @@
 <script src="./threejs/ViewHelper.js"></script>
 <script src="./threejs/OutlineEffect.js"></script>
 <script src="./Qgis2threejs.js"></script>
+<script src="./threejs/loaders/GLTFLoader.js"></script>
 </head>
 <body>
 <div id="view">
@@ -114,6 +115,7 @@
 
 <script>
 Q3D.Config.allVisible = true;
+Q3D.Config.viewpoint = {lookAt:{x:485596.72927622194,y:5398745.088004111,z:4.4331510783185245e-14},pos:{x:487243.76341616607,y:5397421.290017385,z:515.8689760086726}};
 Q3D.Config.localMode = true;
 
 var container = document.getElementById("view"),
