@@ -5,6 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Braden Williams - GIS Portfolio</title>
         <script src="https://cdn.tailwindcss.com"></script>
+		
+		
+		
     </head>
     <body class="bg-gray-100 text-gray-800 font-sans">
         <!-- Header -->
@@ -37,23 +40,31 @@
         <!-- About Section -->
 <section id="about" class="bg-white py-16">
   <div class="container mx-auto flex flex-col md:flex-row items-center md:items-start gap-8 px-4">
+    
+    <!-- Image on the Left -->
     <img src="plane.jpeg" alt="Photo of Braden" class="w-full md:w-1/3 rounded-lg shadow-lg object-cover" />
+
+    <!-- Text on the Right -->
     <div class="md:w-2/3 text-center md:text-left">
       <h3 class="text-3xl font-bold mb-6">About Me</h3>
       <p class="text-lg text-gray-700">
         I'm a GIS technician and recent graduate of the Advanced Diploma in Geographic Information Systems at BCIT, with hands-on experience supporting infrastructure and asset management projects. During my practicum with the City of Richmond’s Engineering & Public Works department, I worked extensively with ArcGIS Pro, ArcMap, and Infor Public Sector to update and maintain municipal utility datasets, including stormwater, sanitary, water, and street lighting systems. I bring a strong foundation in spatial analysis, data cleaning, and QA/QC, along with technical skills in SQL, Python, and cartographic design. With a background in English Literature from UBC and several years of experience in music instruction and customer-facing roles, I combine analytical thinking with communication and creative problem-solving. I'm particularly interested in using GIS to support sustainable planning, infrastructure improvement, and public engagement.
       </p>
     </div>
+
   </div>
 </section>
+
 
         <!-- Richmond Section -->
         <section id="about" class="bg-white py-16">
             <div class="container mx-auto flex items-center">
             <div class="flex-1 text-gray-700">
                 <h3 class="text-4xl font-bold mb-6">City of Richmond</h3>
-                <p class="text-2xl text-gray-700">
+                <p class="text-2xl"></p>
+                <p class="text-2xl text-gray-700"></p>
                     From April to June 2025, I worked as a GIS Intern with the Engineering & Public Works department at the City of Richmond, BC. In this role, I managed and updated municipal infrastructure data using ArcMap, ArcGIS Pro, and Infor Public Sector. My work focused on data input, migration, and cleaning for utility asset datasets, including stormwater, sewer, water, and street lighting systems. I conducted thorough QA/QC checks to ensure the accuracy and topological integrity of spatial data. Additionally, I worked with municipal GIS systems to align spatial records with engineering requirements, supporting capital project planning and asset management. This role also involved close collaboration with city staff to resolve data inconsistencies and improve the overall quality of the infrastructure database.
+                </p>
                 </p>
             </div>
             <div class="flex-1">
@@ -62,10 +73,12 @@
             </div>
         </section>
 
+
         <!-- Projects Section Links -->
 <section id="projects" class="py-16 bg-gray-100">
   <div class="container mx-auto px-4">
     <h3 class="text-3xl font-bold text-center mb-8">My Projects</h3>
+
     <ul class="max-w-xl mx-auto space-y-4 text-lg text-blue-700 underline text-center">
       <li>
         <a href="map2.html" target="_blank" class="hover:text-blue-900 transition">
@@ -77,9 +90,12 @@
           Vancouver Bike Paths
         </a>
       </li>
+      
+      <!-- Add more links here -->
     </ul>
   </div>
 </section>
+
 
         <!-- Projects Section -->
 <section id="projects" class="py-16 bg-gray-100">
@@ -88,6 +104,7 @@
     
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       
+	  
 	  <!-- Project 4 -->
 <div class="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
   <h4 class="text-2xl font-semibold mb-2 text-center">
@@ -103,6 +120,7 @@
     Click <a href="map2.html" target="_blank" class="text-blue-600 hover:underline">here</a> to view in a separate window.
   </p>
 </div>
+
 
       <!-- Project 2 -->
       <div class="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
@@ -132,6 +150,17 @@
         </p>
       </div>
 
+      <!-- Project 1 -->
+<div class="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
+  <h4 class="text-2xl font-semibold mb-4 text-center">Richmond Rain Gauges</h4>
+  <a href="rainguages.png" target="_blank">
+    <img src="rainguages.png" alt="Urban Planning Map" class="w-full max-w-3xl rounded-lg shadow-lg mb-6 hover:opacity-80 transition">
+  </a>
+  <p class="text-gray-700 text-lg text-center">
+    Here is a map I created for the City of Richmond, showing the locations of rain gauges across the city. This map was used to support infrastructure planning and environmental monitoring.
+  </p>
+</div>
+
               <!-- Project 3 -->
               <div class="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
                 <h4 class="text-2xl font-semibold mb-2 text-center">
@@ -147,9 +176,17 @@
                   Vancouver before and after the year 2000. It highlights the expansion of bike paths and lanes, showcasing the city's commitment to sustainable transportation.
                 </p>
               </div>
-    </div>
-  </div>
-</section>
+      
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+            </div> <!-- End grid -->
+          </div> <!-- End container -->
+      </section>
       
       <!-- Contact Section -->
       <section id="contact" class="bg-white py-16">
@@ -164,6 +201,9 @@
       </section>
 
         <!-- Resume Section -->
+
+
+
         <section id="downloads" class="py-16 bg-gray-100">
           <div class="container mx-auto text-center">
             <h3 class="text-3xl font-bold mb-6">Downloads</h3>
@@ -176,6 +216,9 @@
           </div>
         </section>
         
+
+
+
         <!-- Footer -->
         <footer class="bg-white border-t py-6">
             <div class="container mx-auto text-center text-sm text-gray-500">
@@ -184,12 +227,15 @@
         </footer>
 		
 		<script>
+  // 1. Load the YouTube Iframe API
   let tag = document.createElement('script');
   tag.src = "https://www.youtube.com/iframe_api";
   let firstScriptTag = document.getElementsByTagName('script')[0];
   firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
   let player;
+
+  // 2. Create the player when API is ready
   function onYouTubeIframeAPIReady() {
     player = new YT.Player('crimeVideo', {
       events: {
@@ -197,6 +243,8 @@
       }
     });
   }
+
+  // 3. Autoplay when in view
   function onPlayerReady(event) {
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
