@@ -1,254 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Braden Williams - GIS Portfolio</title>
-        <script src="https://cdn.tailwindcss.com"></script>
-		
-		
-		
-    </head>
-    <body class="bg-gray-100 text-gray-800 font-sans">
-        <!-- Header -->
-        <header class="bg-white shadow-md p-6">
-            <div class="container mx-auto flex justify-between items-center">
-                <h1 class="text-2xl font-bold">Braden Williams</h1>
-                <nav class="space-x-4">
-                  <a href="#about" class="text-blue-600 hover:underline">About</a>
-                  <a href="#projects" class="text-blue-600 hover:underline">Projects</a>
-                  <a href="#contact" class="text-blue-600 hover:underline">Contact</a>
-                  <a href="map2.html" class="text-blue-600 hover:underline">Map</a>
-              </nav>
-            </div>
-        </header>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Braden Williams - GIS Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .project-card:hover { transform: translateY(-5px); transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans">
 
-        <!-- Hero Section -->
-        <section class="bg-gray-100 py-20">
-            <div class="container mx-auto flex items-center">
-                <div class="text-center text-gray-800 flex-1">
-                    <h2 class="text-4xl font-bold mb-4">Braden Williams</h2>
-                    <p class="text-lg mb-6">GIS Professional | Spatial Analyst | Cartographer</p>
-                    <a href="#projects" class="bg-sky-300 text-black px-6 py-3 rounded-lg hover:bg-blue-400 transition">View My Work</a>
-                </div>
-                <div class="flex-1">
-                  <img src="coolphoto.jpeg" alt="GIS Map Example" class="w-80 rounded-lg shadow-lg mx-auto">
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-<section id="about" class="bg-white py-16">
-  <div class="container mx-auto flex flex-col md:flex-row items-center md:items-start gap-8 px-4">
-    
-    <!-- Image on the Left -->
-    <img src="plane.jpeg" alt="Photo of Braden" class="w-full md:w-1/3 rounded-lg shadow-lg object-cover" />
-
-    <!-- Text on the Right -->
-    <div class="md:w-2/3 text-center md:text-left">
-      <h3 class="text-3xl font-bold mb-6">About Me</h3>
-      <p class="text-lg text-gray-700">
-        I'm a GIS technician and recent graduate of the Advanced Diploma in Geographic Information Systems at BCIT, with hands-on experience supporting infrastructure and asset management projects. During my practicum with the City of Richmond’s Engineering & Public Works department, I worked extensively with ArcGIS Pro, ArcMap, and Infor Public Sector to update and maintain municipal utility datasets, including stormwater, sanitary, water, and street lighting systems. I bring a strong foundation in spatial analysis, data cleaning, and QA/QC, along with technical skills in SQL, Python, and cartographic design. With a background in English Literature from UBC and several years of experience in music instruction and customer-facing roles, I combine analytical thinking with communication and creative problem-solving. I'm particularly interested in using GIS to support sustainable planning, infrastructure improvement, and public engagement.
-      </p>
-    </div>
-
-  </div>
-</section>
-
-
-        <!-- Richmond Section -->
-        <section id="about" class="bg-white py-16">
-            <div class="container mx-auto flex items-center">
-            <div class="flex-1 text-gray-700">
-                <h3 class="text-4xl font-bold mb-6">City of Richmond</h3>
-                <p class="text-2xl"></p>
-                <p class="text-2xl text-gray-700"></p>
-                    From April to June 2025, I worked as a GIS Intern with the Engineering & Public Works department at the City of Richmond, BC. In this role, I managed and updated municipal infrastructure data using ArcMap, ArcGIS Pro, and Infor Public Sector. My work focused on data input, migration, and cleaning for utility asset datasets, including stormwater, sewer, water, and street lighting systems. I conducted thorough QA/QC checks to ensure the accuracy and topological integrity of spatial data. Additionally, I worked with municipal GIS systems to align spatial records with engineering requirements, supporting capital project planning and asset management. This role also involved close collaboration with city staff to resolve data inconsistencies and improve the overall quality of the infrastructure database.
-                </p>
-                </p>
-            </div>
-            <div class="flex-1">
-                <img src="richmondposter.jpg" alt="City of Richmond GIS Work" class="w-[350px] rounded-lg shadow-lg mx-auto">
-            </div>
-            </div>
-        </section>
-
-
-        <!-- Projects Section Links -->
-<section id="projects" class="py-16 bg-gray-100">
-  <div class="container mx-auto px-4">
-    <h3 class="text-3xl font-bold text-center mb-8">My Projects</h3>
-
-    <ul class="max-w-xl mx-auto space-y-4 text-lg text-blue-700 underline text-center">
-      <li>
-        <a href="map2.html" target="_blank" class="hover:text-blue-900 transition">
-          Gulf Islands Relief Map
-        </a>
-      </li>
-      <li>
-        <a href="map.html" target="_blank" class="hover:text-blue-900 transition">
-          Vancouver Bike Paths
-        </a>
-      </li>
-      
-      <!-- Add more links here -->
-    </ul>
-  </div>
-</section>
-
-
-        <!-- Projects Section -->
-<section id="projects" class="py-16 bg-gray-100">
-  <div class="container mx-auto px-4">
-    <h3 class="text-3xl font-bold text-center mb-8">My Projects</h3>
-    
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      
-	  
-	  <!-- Project 4 -->
-<div class="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
-  <h4 class="text-2xl font-semibold mb-2 text-center">
-    South Pender Island 
-    <span class="block text-lg font-normal text-gray-600">Contoured 3D Map</span>
-  </h4>
-  <iframe src="map2.html" 
-          class="w-full max-w-3xl rounded-lg shadow-lg mb-6" 
-          style="height: 500px; border: none;" 
-          title="Land Use Change Web Map"></iframe>
-  <p class="text-gray-700 text-lg text-center">
-    This map was made using QGIS with data from the BC Government Open Data Portal, Islands Trust, and the Esri Satellite basemap. Vertical exaggeration = 2.
-    Click <a href="map2.html" target="_blank" class="text-blue-600 hover:underline">here</a> to view in a separate window.
-  </p>
-</div>
-
-
-      <!-- Project 2 -->
-      <div class="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
-      <h4 class="text-2xl font-semibold mb-4 text-center">Vancouver Bike Paths</h4>
-      <a href="bikepaths.html">
-        <img src="BikePathsExport_page-0001.jpg" alt="Urban Planning Map" class="w-full max-w-3xl rounded-lg shadow-lg mb-6 hover:opacity-80 transition">
-      </a>
-  <p class="text-gray-700 text-lg text-center">A static map showing bike paths in Vancouver Pre- and Post-2000.</p>
-</div>
-
-      <!-- Project 0 -->
-      <div class="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
-        <h4 class="text-2xl font-semibold mb-4 text-center">Toronto Crime and Incident Reporter</h4>
-        <iframe
-          id="crimeVideo"
-          class="w-full max-w-3xl rounded-lg shadow-lg mb-6"
-          width="500"
-          height="315"
-          src="https://www.youtube.com/embed/lqkK_uJNYCQ?enablejsapi=1&mute=1"
-          title="YouTube video player"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
-        <p class="text-gray-700 text-lg text-center">
-          This is an app I created at BCIT. Using Esri's Experience Builder, the app allows users to report crime and incidents in their areas, as well as look at crime data trends in the form of an index from 1–10.
-        </p>
-      </div>
-
-      <!-- Project 1 -->
-
-
-              <!-- Project 3 -->
-              <div class="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
-                <h4 class="text-2xl font-semibold mb-2 text-center">
-                  Bike Paths In Vancouver  
-                  <span class="block text-lg font-normal text-gray-600">Before and After 2000</span>
-                </h4>
-                <iframe src="map.html" 
-                        class="w-full max-w-3xl rounded-lg shadow-lg mb-6" 
-                        style="height: 500px; border: none;" 
-                        title="Bike Paths Leaflet Map"></iframe>
-                <p class="text-gray-700 text-lg text-center">
-                  This interactive web map displays the growth of bike infrastructure in
-                  Vancouver before and after the year 2000. It highlights the expansion of bike paths and lanes, showcasing the city's commitment to sustainable transportation.
-                </p>
-              </div>
-      
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-            </div> <!-- End grid -->
-          </div> <!-- End container -->
-      </section>
-      
-      <!-- Contact Section -->
-      <section id="contact" class="bg-white py-16">
-        <div class="container mx-auto text-center">
-          <h3 class="text-3xl font-bold mb-6">Contact Me</h3>
-          <p class="text-lg text-gray-700 mb-6">Interested in working together? Feel free to reach out:</p>
-          <div class="space-x-4">
-            <a href="mailto:bradenw60@gmail.com" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">Email Me</a>
-            <a href="https://www.linkedin.com/in/braden-williams-124b18305" target="_blank" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">LinkedIn</a>
-          </div>
+    <header class="bg-slate-900/90 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800 p-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-black tracking-tighter uppercase text-white">Braden Williams</h1>
+            <nav class="space-x-6 font-semibold text-sm uppercase tracking-widest">
+                <a href="#about" class="text-slate-400 hover:text-sky-400 transition">About</a>
+                <a href="#projects" class="text-slate-400 hover:text-sky-400 transition">Projects</a>
+                <a href="#contact" class="text-slate-400 hover:text-sky-400 transition">Contact</a>
+            </nav>
         </div>
-      </section>
+    </header>
 
-        <!-- Resume Section -->
-
-
-
-        <section id="downloads" class="py-16 bg-gray-100">
-          <div class="container mx-auto text-center">
-            <h3 class="text-3xl font-bold mb-6">Downloads</h3>
-            <a href="BradenWilliams_Resume.pdf"
-               target="_blank"
-               download
-               class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition inline-block mt-4 mx-auto">
-              Download My Resume (PDF)
-            </a>
-          </div>
-        </section>
-        
-
-
-
-        <!-- Footer -->
-        <footer class="bg-white border-t py-6">
-            <div class="container mx-auto text-center text-sm text-gray-500">
-                &copy; 2025 Braden Williams. All rights reserved.
+    <section class="relative py-24 overflow-hidden bg-slate-900">
+        <div class="container mx-auto flex flex-col md:flex-row items-center px-6">
+            <div class="text-center md:text-left flex-1 z-10">
+                <span class="text-sky-400 font-bold tracking-widest uppercase text-sm">GIS Professional // Analyst</span>
+                <h2 class="text-6xl font-black mb-6 leading-tight text-white">Spatial Data & <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600">Cartography.</span></h2>
+                <p class="text-xl mb-10 text-slate-400 max-w-lg font-light">Supporting infrastructure and sustainable planning through advanced geographic analysis.</p>
+                <a href="#projects" class="bg-sky-500 hover:bg-sky-400 text-white font-bold px-10 py-4 rounded-full shadow-lg shadow-sky-500/20 transition-all inline-block">View My Work</a>
             </div>
-        </footer>
-		
-		<script>
-  // 1. Load the YouTube Iframe API
-  let tag = document.createElement('script');
-  tag.src = "https://www.youtube.com/iframe_api";
-  let firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            <div class="flex-1 mt-12 md:mt-0 relative">
+                <div class="absolute -inset-4 bg-sky-500/20 blur-3xl rounded-full"></div>
+                <img src="coolphoto.jpeg" alt="GIS Map Example" class="relative w-full max-w-md rounded-2xl shadow-2xl mx-auto border border-slate-700">
+            </div>
+        </div>
+    </section>
 
-  let player;
+    <section id="about" class="bg-slate-800/50 py-24">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row gap-12 items-center mb-24">
+                <img src="plane.jpeg" alt="Braden Williams" class="w-full md:w-1/3 rounded-3xl shadow-2xl object-cover grayscale hover:grayscale-0 transition duration-700 border border-slate-700">
+                <div class="md:w-2/3">
+                    <h3 class="text-3xl font-bold mb-6 text-white border-b-2 border-sky-500 inline-block">About Me</h3>
+                    <p class="text-lg text-slate-400 leading-relaxed">
+                        I'm a GIS technician and recent graduate of the Advanced Diploma in Geographic Information Systems at BCIT. With a background in English Literature from UBC and experience in music instruction, I combine analytical thinking with creative problem-solving. I am particularly interested in using GIS to support sustainable planning, infrastructure improvement, and public engagement.
+                    </p>
+                </div>
+            </div>
 
-  // 2. Create the player when API is ready
-  function onYouTubeIframeAPIReady() {
-    player = new YT.Player('crimeVideo', {
-      events: {
-        'onReady': onPlayerReady
-      }
-    });
-  }
+            <div class="flex flex-col md:flex-row-reverse gap-12 items-center">
+                <img src="richmondposter.jpg" alt="City of Richmond Work" class="w-full md:w-1/3 rounded-3xl shadow-2xl border border-slate-700">
+                <div class="md:w-2/3">
+                    <h3 class="text-3xl font-bold mb-6 text-white">City of Richmond</h3>
+                    <p class="text-lg text-slate-400 leading-relaxed">
+                        From April to June 2025, I worked as a GIS Intern with the Engineering & Public Works department. My work focused on data input, migration, and cleaning for utility asset datasets, including stormwater, sewer, water, and street lighting systems. I conducted thorough QA/QC checks to ensure accuracy and topological integrity of spatial data using ArcMap, ArcGIS Pro, and Infor Public Sector.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-  // 3. Autoplay when in view
-  function onPlayerReady(event) {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          event.target.playVideo();
+    <section id="projects" class="py-24 bg-slate-900">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16">
+                <h3 class="text-4xl font-bold mb-4 text-white">Featured Projects</h3>
+                <div class="flex flex-wrap justify-center gap-4 text-sky-400 text-sm font-bold uppercase tracking-tighter">
+                    <a href="map2.html" target="_blank" class="hover:underline">Gulf Islands Relief</a>
+                    <span>•</span>
+                    <a href="map.html" target="_blank" class="hover:underline">Vancouver Bike Paths</a>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                
+                <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 project-card shadow-xl">
+                    <h4 class="text-2xl font-bold mb-2 text-white">South Pender Island</h4>
+                    <span class="block text-sky-400 text-sm font-bold mb-6 uppercase tracking-widest">Contoured 3D Map</span>
+                    <iframe src="map2.html" class="w-full rounded-xl mb-6 border border-slate-900" style="height: 400px;" title="South Pender 3D Map"></iframe>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Made using QGIS with data from the BC Government Open Data Portal and Islands Trust. Vertical exaggeration = 2 to emphasize topography.
+                    </p>
+                </div>
+
+                <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 project-card shadow-xl">
+                    <h4 class="text-2xl font-bold mb-2 text-white">Toronto Crime Reporter</h4>
+                    <span class="block text-sky-400 text-sm font-bold mb-6 uppercase tracking-widest">Experience Builder App</span>
+                    <div class="aspect-video mb-6">
+                        <iframe id="crimeVideo" class="w-full h-full rounded-xl" src="https://www.youtube.com/embed/lqkK_uJNYCQ?enablejsapi=1&mute=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        An app created at BCIT using Esri's Experience Builder allowing users to report incidents and analyze crime data trends from 1–10.
+                    </p>
+                </div>
+
+                <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 project-card shadow-xl">
+                    <h4 class="text-2xl font-bold mb-2 text-white">Bike Infrastructure Growth</h4>
+                    <span class="block text-sky-400 text-sm font-bold mb-6 uppercase tracking-widest">Leaflet Interactive Map</span>
+                    <iframe src="map.html" class="w-full rounded-xl mb-6 border border-slate-900" style="height: 400px;" title="Bike Paths Map"></iframe>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        Displays the growth of bike infrastructure in Vancouver before and after the year 2000, highlighting urban sustainability.
+                    </p>
+                </div>
+
+                <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 project-card shadow-xl">
+                    <h4 class="text-2xl font-bold mb-2 text-white">Vancouver Cartography</h4>
+                    <span class="block text-sky-400 text-sm font-bold mb-6 uppercase tracking-widest">Static Analysis Print</span>
+                    <a href="bikepaths.html" class="block mb-6 overflow-hidden rounded-xl">
+                        <img src="BikePathsExport_page-0001.jpg" alt="Urban Planning Map" class="w-full hover:scale-105 transition duration-500 shadow-inner">
+                    </a>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        A detailed static map focused on spatial distribution and history of the Vancouver cycling network.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="bg-sky-600 py-24">
+        <div class="container mx-auto text-center px-6">
+            <h3 class="text-4xl font-black mb-6 text-white uppercase tracking-tighter">Let's Connect</h3>
+            <p class="text-xl text-sky-100 mb-12 max-w-xl mx-auto font-light">Available for GIS analysis projects, data management, and cartographic design.</p>
+            <div class="flex flex-wrap justify-center gap-6">
+                <a href="mailto:bradenw60@gmail.com" class="bg-white text-sky-600 font-bold px-10 py-4 rounded-full hover:bg-slate-100 transition shadow-2xl">Email Me</a>
+                <a href="https://www.linkedin.com/in/braden-williams-124b18305" target="_blank" class="bg-slate-900 text-white font-bold px-10 py-4 rounded-full hover:bg-black transition shadow-2xl border border-slate-700">LinkedIn</a>
+                <a href="BradenWilliams_Resume.pdf" download class="bg-slate-100 text-slate-800 font-bold px-10 py-4 rounded-full hover:bg-white transition shadow-2xl">Download Resume (PDF)</a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-950 py-12 border-t border-slate-900 text-center text-slate-500 text-sm">
+        <div class="container mx-auto">
+            <p class="mb-2 uppercase tracking-widest text-[10px]">&copy; 2026 Braden Williams // GIS Portfolio</p>
+        </div>
+    </footer>
+
+    <script>
+        let tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        let firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        let player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('crimeVideo', {
+                events: { 'onReady': onPlayerReady }
+            });
         }
-      });
-    }, { threshold: 0.5 });
 
-    const target = document.getElementById('crimeVideo');
-    observer.observe(target);
-  }
-</script>
-    </body>
+        function onPlayerReady(event) {
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        event.target.playVideo();
+                    } else {
+                        event.target.pauseVideo();
+                    }
+                });
+            }, { threshold: 0.5 });
+            observer.observe(document.getElementById('crimeVideo'));
+        }
+    </script>
+</body>
 </html>
