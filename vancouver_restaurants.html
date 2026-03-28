@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chateau Granville — Curated Dining in Vancouver</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:        #c9a84c;
+  --gold-light:  #e2c97e;
+  --gold-pale:   #f5edd8;
+  --ink:         #0e0d0b;
+  --ink-mid:     #1c1a16;
+  --ink-soft:    #2e2b24;
+  --cream:       #f8f3ea;
+  --cream-dark:  #ede5d4;
+  --muted:       #9a9080;
+  --terracotta:  #b85c38;
+  --amber:       #d4813a;
+  --sage:        #6b8c72;
+  --card-bg:     rgba(248,243,234,0.97);
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: 'Jost', sans-serif; background: var(--ink); color: var(--cream); overflow-x: hidden; }
+
+/* ─── NAV ─── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 52px; height: 72px;
+  background: linear-gradient(to bottom, rgba(14,13,11,0.9) 0%, transparent 100%);
+  transition: background 0.4s, backdrop-filter 0.4s;
+}
+nav.scrolled {
+  background: rgba(14,13,11,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(201,168,76,0.14);
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 300; letter-spacing: 0.12em;
+  color: var(--cream); text-decoration: none;
+}
+.nav-logo span { color: var(--gold); }
+.nav-links { display: flex; gap: 40px; }
+.nav-links a {
+  font-size: 11px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(248,243,234,0.6); text-decoration: none; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--gold-light); }
+.nav-cta {
+  font-size: 10px; font-weight: 400; letter-spacing: 0.2em; text-transform: uppercase;
+  padding: 9px 24px; border: 1px solid rgba(201,168,76,0.5);
+  color: var(--gold-light); text-decoration: none; transition: all 0.25s;
+}
+.nav-cta:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+/* ─── HERO ─── */
+#hero {
+  position: relative; height: 100vh; min-height: 700px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: 
+    linear-gradient(165deg, rgba(22,20,15,0.8), rgba(19,16,9,0.8)),
+    url('lobby.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.hero-grain {
+  position: absolute; inset: 0; opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+  animation: grain 0.9s steps(1) infinite;
+}
+@keyframes grain { 0%{background-position:0 0}20%{background-position:-15% 5%}40%{background-position:-5% 25%}60%{background-position:15% 0}80%{background-position:3% 35%}to{background-position:0 0} }
+.hero-rings {
+  position: absolute; inset: 0; pointer-events: none;
+  display: flex; align-items: center; justify-content: center;
+}
+.hero-rings::before {
+  content: ''; position: absolute;
+  width: 720px; height: 720px; border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.05);
+}
+.hero-rings::after {
+  content: ''; position: absolute;
+  width: 460px; height: 460px; border-radius: 50%;
+  border: 1px solid rgba(201,168,76,0.07);
+}
+
+.hero-content {
+  position: relative; z-index: 2; text-align: center;
+  max-width: 880px; padding: 0 24px;
+  animation: fadeUp 1.3s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(36px)} to{opacity:1;transform:translateY(0)} }
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 18px;
+  font-size: 10px; font-weight: 400; letter-spacing: 0.35em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 30px;
+  animation: fadeUp 1.3s 0.1s cubic-bezier(0.22,1,0.36,1) both;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content:''; display:block; width:44px; height:1px;
+  background: var(--gold); opacity:0.45;
+}
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(62px, 9vw, 112px);
+  font-weight: 300; line-height: 0.92; letter-spacing: -0.01em;
+  color: var(--cream); margin-bottom: 32px;
+  animation: fadeUp 1.3s 0.18s cubic-bezier(0.22,1,0.36,1) both;
+}
+.hero-title em { font-style: italic; color: var(--gold-light); }
+.hero-rule {
+  width: 1px; height: 52px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  margin: 0 auto 30px;
+  animation: fadeUp 1.3s 0.28s cubic-bezier(0.22,1,0.36,1) both;
+}
+.hero-subtitle {
+  font-size: 15px; font-weight: 200; letter-spacing: 0.07em;
+  color: rgba(248,243,234,0.52); line-height: 1.85;
+  max-width: 500px; margin: 0 auto 48px;
+  animation: fadeUp 1.3s 0.34s cubic-bezier(0.22,1,0.36,1) both;
+}
+.hero-actions {
+  display: flex; gap: 14px; justify-content: center; align-items: center;
+  animation: fadeUp 1.3s 0.44s cubic-bezier(0.22,1,0.36,1) both;
+}
+.btn-primary {
+  font-family: 'Jost', sans-serif; font-size: 10.5px; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  padding: 15px 40px; background: var(--gold); color: var(--ink);
+  text-decoration: none; border: 1px solid var(--gold); transition: all 0.25s;
+}
+.btn-primary:hover { background: var(--gold-light); border-color: var(--gold-light); }
+.btn-ghost {
+  font-family: 'Jost', sans-serif; font-size: 10.5px; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  padding: 15px 40px; background: transparent;
+  color: rgba(248,243,234,0.65); text-decoration: none;
+  border: 1px solid rgba(248,243,234,0.2); transition: all 0.25s;
+}
+.btn-ghost:hover { border-color: rgba(248,243,234,0.5); color: var(--cream); }
+
+.hero-scroll {
+  position: absolute; bottom: 88px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+  color: rgba(248,243,234,0.3);
+  animation: fadeUp 1.5s 0.7s cubic-bezier(0.22,1,0.36,1) both;
+}
+.scroll-line {
+  width: 1px; height: 44px;
+  background: linear-gradient(to bottom, rgba(201,168,76,0.7), transparent);
+  animation: scrollBob 2.2s ease-in-out infinite;
+}
+@keyframes scrollBob { 0%,100%{opacity:0.4;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(0.8)} }
+
+.hero-stats {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  display: flex;
+  border-top: 1px solid rgba(201,168,76,0.1);
+  background: rgba(14,13,11,0.65);
+  backdrop-filter: blur(10px);
+  animation: fadeUp 1.3s 0.6s cubic-bezier(0.22,1,0.36,1) both;
+}
+.hero-stat {
+  flex: 1; padding: 22px 0; text-align: center;
+  border-right: 1px solid rgba(201,168,76,0.08);
+}
+.hero-stat:last-child { border-right: none; }
+.stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 34px; font-weight: 300;
+  color: var(--gold-light); line-height: 1;
+  display: block; margin-bottom: 6px;
+}
+.stat-label {
+  font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(248,243,234,0.35); font-weight: 400;
+}
+
+/* ─── ABOUT ─── */
+#about { background: var(--cream); color: var(--ink); padding: 100px 52px; }
+.about-inner { max-width: 1120px; margin: 0 auto; }
+.section-tag {
+  font-size: 9.5px; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--gold); display: flex; align-items: center; gap: 14px; margin-bottom: 28px;
+}
+.section-tag::after { content:''; flex:1; max-width:60px; height:1px; background:var(--gold); opacity:0.4; }
+.about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 88px; align-items: start; }
+
+.about-left h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(38px, 4vw, 56px); font-weight: 300; line-height: 1.12;
+  color: var(--ink); margin-bottom: 28px;
+}
+.about-left h2 em { font-style: italic; color: var(--terracotta); }
+.about-left p {
+  font-size: 15px; font-weight: 300; line-height: 1.88; color: #4a4438; margin-bottom: 20px;
+}
+.about-signature {
+  display: flex; align-items: center; gap: 16px;
+  margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--cream-dark);
+}
+.signature-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--ink); display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.signature-text { font-size: 12px; color: var(--muted); line-height: 1.6; }
+.signature-text strong { display:block; font-size:13px; color:var(--ink); font-weight:500; }
+
+.about-right { display: flex; flex-direction: column; gap: 2px; }
+.feature-card {
+  padding: 26px 30px; background: var(--cream-dark);
+  border-left: 3px solid transparent; transition: all 0.3s; cursor: default;
+}
+.feature-card:hover { background: var(--ink); border-left-color: var(--gold); }
+.feature-card:hover .fc-title { color: var(--cream); }
+.feature-card:hover .fc-text  { color: rgba(248,243,234,0.5); }
+.feature-card:hover .fc-num   { color: var(--gold); }
+.fc-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 11px;
+  letter-spacing: 0.22em; color: var(--gold); margin-bottom: 10px; display: block; transition: color 0.3s;
+}
+.fc-title {
+  font-family: 'Cormorant Garamond', serif; font-size: 22px;
+  font-weight: 400; color: var(--ink); margin-bottom: 8px; transition: color 0.3s;
+}
+.fc-text { font-size: 13px; font-weight: 300; color: #6a5f52; line-height: 1.72; transition: color 0.3s; }
+
+/* ─── DIVIDER BAND ─── */
+.divider-band {
+  background: var(--ink-mid);
+  padding: 52px; display: flex; align-items: center; justify-content: space-between; gap: 32px;
+  border-top: 1px solid rgba(201,168,76,0.12);
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+}
+.divider-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(24px, 3vw, 38px); font-weight: 300; font-style: italic;
+  color: rgba(248,243,234,0.65); max-width: 640px; line-height: 1.45;
+}
+.divider-text em { color: var(--gold-light); font-style: normal; }
+.divider-btn {
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  padding: 15px 34px; border: 1px solid rgba(201,168,76,0.45);
+  color: var(--gold-light); text-decoration: none; white-space: nowrap;
+  transition: all 0.25s; flex-shrink: 0;
+}
+.divider-btn:hover { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+
+/* ─── MAP SECTION ─── */
+#map-section { height: 100vh; display: flex; flex-direction: column; position: relative; }
+.map-header {
+  background: var(--ink-soft);
+  padding: 16px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid rgba(201,168,76,0.12);
+  flex-shrink: 0;
+}
+.map-header-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21px; font-weight: 300; color: var(--cream); letter-spacing: 0.04em;
+}
+.map-header-title em { color: var(--gold-light); font-style: italic; }
+.map-header-sub { font-size: 10.5px; color: var(--muted); letter-spacing: 0.1em; font-weight: 300; }
+
+.map-app { display: flex; flex: 1; overflow: hidden; }
+
+/* sidebar */
+#sidebar {
+  width: 320px; min-width: 320px; background: var(--cream);
+  display: flex; flex-direction: column; overflow: hidden;
+  border-right: 1px solid var(--cream-dark); z-index: 10;
+}
+#sidebar-header { padding: 20px 18px 14px; background: var(--ink-soft); flex-shrink: 0; }
+#sidebar-header .eyebrow {
+  font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--gold); font-weight: 400; margin-bottom: 4px;
+}
+#sidebar-header h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21px; color: var(--cream); line-height: 1.2; font-weight: 300;
+}
+#sidebar-header h2 em { color: var(--gold-light); font-style: italic; }
+#sidebar-header .subtitle { font-size: 11px; color: var(--muted); margin-top: 5px; font-weight: 300; }
+
+#filters {
+  display: flex; gap: 5px; padding: 11px 13px;
+  background: var(--cream-dark); border-bottom: 1px solid #ddd5c5;
+  flex-wrap: wrap; flex-shrink: 0;
+}
+.filter-btn {
+  font-family: 'Jost', sans-serif; font-size: 10px; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 20px; border: 1px solid #ccc5b5;
+  cursor: pointer; transition: all 0.2s; background: var(--cream); color: var(--muted);
+}
+.filter-btn:hover { border-color: var(--gold); color: #8a6a20; }
+.filter-btn.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+.filter-btn.active.fine-dining { background: var(--terracotta); border-color: var(--terracotta); }
+.filter-btn.active.ramen       { background: var(--amber); border-color: var(--amber); color: var(--ink); }
+.filter-btn.active.brunch      { background: var(--sage); border-color: var(--sage); }
+
+#restaurant-list { overflow-y: auto; flex: 1; padding: 5px 0; }
+#restaurant-list::-webkit-scrollbar { width: 3px; }
+#restaurant-list::-webkit-scrollbar-track { background: transparent; }
+#restaurant-list::-webkit-scrollbar-thumb { background: #ccc5b5; border-radius: 2px; }
+
+.restaurant-item {
+  padding: 12px 17px; cursor: pointer;
+  border-left: 3px solid transparent; transition: all 0.2s;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.restaurant-item:hover  { background: var(--cream-dark); border-left-color: var(--gold); }
+.restaurant-item.active { background: #ede7d8; border-left-color: var(--terracotta); }
+.restaurant-item .item-top { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; }
+.restaurant-item .name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; color: var(--ink); line-height: 1.25; font-weight: 600;
+}
+.restaurant-item .category-pill {
+  font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 3px 7px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; font-weight: 500;
+}
+.pill-fine-dining { background: #f5ddd5; color: var(--terracotta); }
+.pill-ramen       { background: #fdecd8; color: #c47020; }
+.pill-brunch      { background: #ddeee0; color: #4a7555; }
+.restaurant-item .meta { display:flex; align-items:center; gap:8px; margin-top:4px; }
+.stars       { color: var(--gold); font-size: 11px; }
+.rating-num  { font-size: 11.5px; font-weight: 500; color: var(--ink); }
+.review-count{ font-size: 10.5px; color: var(--muted); }
+.price       { font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+.restaurant-item .address {
+  font-size: 10.5px; color: var(--muted); margin-top: 3px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+#map { flex: 1; background: var(--ink); }
+
+/* popups */
+.leaflet-popup-content-wrapper {
+  background: var(--card-bg); border-radius: 3px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4); border: none; padding: 0; overflow: hidden; width: 292px;
+}
+.leaflet-popup-content { margin: 0; width: 100% !important; }
+.leaflet-popup-tip-container { display: none; }
+.leaflet-popup-close-button { top:10px !important; right:10px !important; color:var(--muted) !important; font-size:18px !important; z-index:10; }
+.popup-inner { padding: 20px; }
+.popup-eyebrow { font-size: 8.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 5px; }
+.popup-name { font-family: 'Cormorant Garamond', serif; font-size: 21px; color: var(--ink); line-height: 1.2; font-weight: 600; margin-bottom: 10px; }
+.popup-meta { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+.popup-divider { height:1px; background:var(--cream-dark); margin:12px 0; }
+.popup-address { font-size:12px; color:var(--muted); display:flex; gap:6px; align-items:flex-start; }
+.popup-address svg { flex-shrink:0; margin-top:2px; }
+.popup-hours { font-size:11px; color:var(--ink); margin-top:8px; display:flex; gap:6px; align-items:flex-start; }
+.popup-hours svg { flex-shrink:0; margin-top:2px; }
+.popup-review { margin-top:12px; font-size:13px; color:#3a3530; font-style:italic; line-height:1.65; border-left:2px solid var(--gold); padding-left:10px; font-family:'Cormorant Garamond',serif; }
+
+/* markers */
+.custom-marker {
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%; border:2px solid white;
+  box-shadow:0 2px 10px rgba(0,0,0,0.5);
+  transition:transform 0.15s; cursor:pointer;
+}
+.custom-marker:hover { transform: scale(1.18); }
+.custom-marker.fine-dining { background: var(--terracotta); }
+.custom-marker.ramen       { background: var(--amber); }
+.custom-marker.brunch      { background: var(--sage); }
+
+#count-badge {
+  padding: 9px 17px; font-size: 10.5px; color: var(--muted);
+  border-top: 1px solid #ddd5c5; background: var(--cream-dark);
+  flex-shrink: 0; letter-spacing: 0.04em; font-weight: 300;
+}
+#count-badge span { color: var(--ink); font-weight: 500; }
+
+#legend {
+  position: absolute; bottom: 22px; right: 14px;
+  background: rgba(14,13,11,0.93); border-radius: 2px; padding: 12px 16px;
+  z-index: 800; backdrop-filter: blur(8px);
+  border: 1px solid rgba(201,168,76,0.1);
+}
+#legend .legend-title { font-size: 8.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold); font-weight: 400; margin-bottom: 10px; }
+#legend .legend-item { display:flex; align-items:center; gap:8px; margin-bottom:7px; font-size:11.5px; color:var(--cream); font-weight:300; }
+#legend .legend-item:last-child { margin-bottom:0; }
+.legend-dot { width:11px; height:11px; border-radius:50%; border:1.5px solid rgba(255,255,255,0.35); flex-shrink:0; }
+.ld-fine  { background: var(--terracotta); }
+.ld-ramen { background: var(--amber); }
+.ld-brunch{ background: var(--sage); }
+
+/* ─── FOOTER ─── */
+footer {
+  background: var(--ink); border-top: 1px solid rgba(201,168,76,0.1);
+  padding: 38px 52px; display: flex; align-items: center; justify-content: space-between; gap: 24px;
+}
+.footer-logo { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:300; letter-spacing:0.1em; color:rgba(248,243,234,0.45); }
+.footer-logo span { color: var(--gold); }
+.footer-copy { font-size:11px; color:rgba(248,243,234,0.22); letter-spacing:0.06em; font-weight:300; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 900px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  #about { padding: 72px 24px; }
+  .about-grid { grid-template-columns: 1fr; gap: 48px; }
+  .divider-band { padding: 36px 24px; flex-direction: column; text-align: center; }
+  #sidebar { width: 100%; min-width: unset; height: 42vh; }
+  .map-app { flex-direction: column; }
+  #map { min-height: 280px; }
+  footer { flex-direction: column; gap: 12px; text-align: center; padding: 28px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <a class="nav-logo" href="#">Chateau <span>Granville</span></a>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#map-section">Explore</a>
+    <a href="#">Concierge</a>
+  </div>
+  <a class="nav-cta" href="#map-section">Explore the Map</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-rings"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Curated Dining · Vancouver, BC</div>
+    <h1 class="hero-title">Dine with<br><em>Intention</em></h1>
+    <div class="hero-rule"></div>
+    <p class="hero-subtitle">Personalized restaurant recommendations crafted for the discerning guest — wherever your evening takes you in the city.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="#map-section">Explore Restaurants</a>
+      <a class="btn-ghost" href="#about">Our Approach</a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <span class="stat-num">19</span>
+      <span class="stat-label">Curated Venues</span>
+    </div>
+    <div class="hero-stat">
+      <span class="stat-num">3</span>
+      <span class="stat-label">Dining Categories</span>
+    </div>
+    <div class="hero-stat">
+      <span class="stat-num">4.6<span style="font-size:18px;vertical-align:middle;line-height:1">★</span></span>
+      <span class="stat-label">Avg. Guest Rating</span>
+    </div>
+    <div class="hero-stat">
+      <span class="stat-num">∞</span>
+      <span class="stat-label">Memorable Evenings</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-inner">
+    <div class="section-tag">Our Philosophy</div>
+    <div class="about-grid">
+      <div class="about-left">
+        <h2>The right table,<br>every <em>single</em> time.</h2>
+        <p>Best Western Premier Chateau Granville's dining guide was born from a simple belief: finding an exceptional meal in an unfamiliar city shouldn't require hours of conflicting reviews or expensive guesswork.</p>
+        <p>We've hand-selected Vancouver's finest restaurants — spanning intimate fine dining rooms, soulful ramen dens, and beloved weekend brunch spots — and mapped them so you can find exactly what you're craving, exactly where you are.</p>
+        <p>Whether you're a hotel guest seeking a spontaneous dinner reservation or a visitor planning a full culinary evening, our curated map places the city's best within reach — sorted by occasion, filtered by mood.</p>
+        <div class="about-signature">
+          <div class="signature-icon">🏨</div>
+          <div class="signature-text">
+            <strong>Chateau Granville Front Desk</strong>
+            Curated with care for our guests in Vancouver
+          </div>
+        </div>
+      </div>
+      <div class="about-right">
+        <div class="feature-card">
+          <span class="fc-num">01</span>
+          <div class="fc-title">Handpicked, Not Algorithmic</div>
+          <p class="fc-text">Every listing is personally verified by our hotel staff. </p>
+        </div>
+        <div class="feature-card">
+          <span class="fc-num">02</span>
+          <div class="fc-title">Filtered by Mood & Occasion</div>
+          <p class="fc-text">Anniversary dinner or casual ramen crawl? Sort by category, browse the map, and find the venue that fits your evening — not just your budget.</p>
+        </div>
+        <div class="feature-card">
+          <span class="fc-num">03</span>
+          <div class="fc-title">Live Hours & Real Reviews</div>
+          <p class="fc-text">Each card surfaces real opening hours, addresses, guest ratings, and first-hand review snippets — everything you need before you step out the door.</p>
+        </div>
+        <div class="feature-card">
+          <span class="fc-num">04</span>
+          <div class="fc-title">Always Within Reach</div>
+          <p class="fc-text">Our selections centre on Downtown Vancouver, Coal Harbour, and the West End — all minutes from the hotel. Fine dining needn't be far.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER BAND -->
+<div class="divider-band">
+  <div class="divider-text">
+    "The finest restaurants in Vancouver, <em>mapped</em> for you — one neighbourhood at a time."
+  </div>
+  <a class="divider-btn" href="#map-section">Open the Map →</a>
+</div>
+
+<!-- MAP SECTION -->
+<section id="map-section">
+  <div class="map-header">
+    <div class="map-header-title">Vancouver <em>Dining Map</em></div>
+    <div class="map-header-sub">19 venues · Click any pin to explore</div>
+  </div>
+  <div class="map-app">
+    <div id="sidebar">
+      <div id="sidebar-header">
+        <div class="eyebrow">Vancouver, BC</div>
+        <h2>Chateau Granville <em>Best Eats</em></h2>
+        <div class="subtitle">19 top-rated restaurants across the city</div>
+      </div>
+      <div id="filters">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn fine-dining" data-filter="fine-dining">Fine Dining</button>
+        <button class="filter-btn ramen" data-filter="ramen">Ramen</button>
+        <button class="filter-btn brunch" data-filter="brunch">Brunch & Café</button>
+      </div>
+      <div id="restaurant-list"></div>
+      <div id="count-badge"><span id="visible-count">19</span> restaurants shown</div>
+    </div>
+    <div id="map"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Chateau <span>Granville</span></div>
+  <div class="footer-copy">© 2026 Chateau Granville · Vancouver, BC · All dining recommendations are independently curated.</div>
+</footer>
+
+<script>
+// Nav scroll effect
+window.addEventListener('scroll', () => {
+  document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+const restaurants = [
+  { id:1,  name:"Botanist",                    category:"fine-dining", lat:49.2882901, lng:-123.1165550, rating:4.6, reviews:1879, price:"$$$", address:"1038 Canada Pl, Vancouver",       hours:"Tue–Fri: 11:30AM–1:30PM & 5:30–10PM",               snippet:"The cocktails were extremely well crafted, the service was great and the food was mind expanding." },
+  { id:2,  name:"Nightingale",                 category:"fine-dining", lat:49.2873977, lng:-123.1174750, rating:4.5, reviews:3832, price:"$$$", address:"1017 W Hastings St, Vancouver",    hours:"Daily 11:30AM–11PM",                                  snippet:"The lasagna was absolutely amazing — a must-try. Perfect for sharing dishes with wine." },
+  { id:3,  name:"Cardero's Restaurant",        category:"fine-dining", lat:49.2916101, lng:-123.1274816, rating:4.5, reviews:6911, price:"$$$", address:"1583 Coal Harbour Quay, Vancouver", hours:"Mon–Thu: 11:30AM–10:30PM · Fri–Sat: until 11:30PM",  snippet:"A window seat with a beautiful view of Coal Harbour. The Sablefish was SOOOO tender!" },
+  { id:4,  name:"Chambar Restaurant",          category:"fine-dining", lat:49.2801271, lng:-123.1099350, rating:4.5, reviews:4345, price:"$$$", address:"568 Beatty St, Vancouver",         hours:"Mon–Wed: 4:30–10PM · Thu–Fri: 4:30–11PM",           snippet:"Belgian-inspired fine dining with amazing creative drink options and a stunning brick interior." },
+  { id:5,  name:"Riley's Vancouver",           category:"fine-dining", lat:49.2879155, lng:-123.1152660, rating:4.7, reviews:3384, price:"$$$", address:"200 Burrard St, Vancouver",        hours:"Mon–Thu: 11:30AM–10PM · Sat–Sun: 10:30AM–11PM",     snippet:"The brioche bread with whipped butter and lobster oil is hands-down the best thing on the menu." },
+  { id:6,  name:"Glowbal",                     category:"fine-dining", lat:49.2815314, lng:-123.1173984, rating:4.6, reviews:9090, price:"$$$", address:"590 W Georgia St, Vancouver",      hours:"Mon–Thu: 11:30AM–10PM · Sat–Sun: 10:30AM–11PM",     snippet:"Every dish was beautifully presented and packed with flavour — consistency and care throughout." },
+  { id:7,  name:"Joe Fortes Seafood & Chop",   category:"fine-dining", lat:49.2849486, lng:-123.1245531, rating:4.5, reviews:8457, price:"$$$", address:"777 Thurlow St, Vancouver",        hours:"Daily 11AM–11PM",                                    snippet:"The oysters were divine. Service was top notch — crew kept water and wine refilled all evening!" },
+  { id:8,  name:"Osteria Savio Volpe",         category:"fine-dining", lat:49.2574425, lng:-123.0909434, rating:4.6, reviews:3554, price:"$$$", address:"615 Kingsway, Vancouver",          hours:"Daily 5–10:30PM",                                    snippet:"The pasta was a standout: perfectly folded, silky, in a rich savoury sauce. Best Italian in town." },
+  { id:9,  name:"Ramen Danbo Robson",          category:"ramen",       lat:49.2874757, lng:-123.1289899, rating:4.6, reviews:5526, price:"$",   address:"1333 Robson St, Vancouver",        hours:"Daily 11AM–11PM",                                    snippet:"Rich, flavourful and perfectly customizable. Great depth of broth with ideal noodle texture." },
+  { id:10, name:"Tonkotsu Ramen Tsukiya",      category:"ramen",       lat:49.2918299, lng:-123.1345432, rating:4.8, reviews:754,  price:"$",   address:"740 Denman St, Vancouver",         hours:"Mon–Tue, Fri–Sun: 11:30AM–8:30PM",                   snippet:"OUTSTANDING ramen!! Deep, rich and layered broth. Everything thereafter was absolutely perfect." },
+  { id:11, name:"Maruhachi Ra-men Westend",    category:"ramen",       lat:49.2905771, lng:-123.1333700, rating:4.6, reviews:3060, price:"$",   address:"780 Bidwell St, Vancouver",        hours:"Mon–Thu, Sat–Sun: 11:30AM–9:30PM",                   snippet:"Authentic Japanese ramen. Broth was thick and well flavored. Noodle texture was perfect." },
+  { id:12, name:"JINYA Ramen Bar",             category:"ramen",       lat:49.2803152, lng:-123.1179336, rating:4.4, reviews:5019, price:"$$",  address:"541 Robson St, Vancouver",         hours:"Mon–Thu: 11AM–10PM · Fri–Sat: until 11PM",           snippet:"The JINYA Tonkotsu Black was simply excellent. Rich, deep broth with slow-cooked pork flavour." },
+  { id:13, name:"Afuri Vancouver",             category:"ramen",       lat:49.2600837, lng:-123.1013162, rating:4.5, reviews:1658, price:"$$",  address:"2801 Main St, Vancouver",          hours:"Mon–Thu, Sun: 11:30AM–9:30PM · Fri–Sat: until 10:30PM", snippet:"Lovely, spacious and bright. The lunch combo special is such an incredible deal!" },
+  { id:14, name:"Menya Raizo by Zakkushi",     category:"ramen",       lat:49.2633411, lng:-123.1131008, rating:4.4, reviews:1253, price:"$$",  address:"401 W Broadway, Vancouver",        hours:"Mon–Thu, Sat–Sun: 11AM–9PM · Fri: Closed",           snippet:"One of the tastiest broths I've tried. Lanterns, noren curtains — truly feels like Japan." },
+  { id:15, name:"Cafe Medina",                 category:"brunch",      lat:49.2804485, lng:-123.1168982, rating:4.5, reviews:5467, price:"$$",  address:"780 Richards St, Vancouver",       hours:"Mon–Fri: 8AM–3PM · Sat–Sun: 9AM–3PM",               snippet:"Mediterranean-inspired brunch. The Belgian waffles and fricassée are absolutely iconic." },
+  { id:16, name:"Twisted Fork",                category:"brunch",      lat:49.2831834, lng:-123.1044482, rating:4.5, reviews:1983, price:"$$",  address:"213 Carrall St, Vancouver",        hours:"Wed–Sun: 9AM–2PM · Mon–Tue: Closed",                 snippet:"Quirky decor, amazing house made sourdough and hot sauce. A truly unique brunch spot." },
+  { id:17, name:"Jam Cafe",                    category:"brunch",      lat:49.2802619, lng:-123.1096419, rating:4.5, reviews:4421, price:"$$",  address:"556 Beatty St, Vancouver",         hours:"Mon–Fri: 8AM–2:30PM · Sat–Sun: 8AM–3PM",            snippet:"The fried chicken French toast — hot honey, spicy sour cream, maple bbq sauce — is pure perfection." },
+  { id:18, name:"Brunch Vancouver",            category:"brunch",      lat:49.2778708, lng:-123.1256128, rating:4.7, reviews:1934, price:"$$",  address:"1147 Granville St, Vancouver",     hours:"Daily 8:30AM–3PM",                                   snippet:"Solid Mexican-inspired brunch without the massive wait times. Enchiladas are a must." },
+  { id:19, name:"Craffles",                    category:"brunch",      lat:49.2759437, lng:-123.1247047, rating:4.7, reviews:1720, price:"$$",  address:"518 Davie St, Vancouver",          hours:"Daily 8AM–4PM",                                      snippet:"The French toast is hands-down the best I've ever had — with a dedicated vegan menu too." }
+];
+
+const categoryColors = { 'fine-dining':'#b85c38', 'ramen':'#d4813a', 'brunch':'#6b8c72' };
+const categoryEmoji  = { 'fine-dining':'🍽', 'ramen':'🍜', 'brunch':'☕' };
+const categoryLabel  = { 'fine-dining':'Fine Dining', 'ramen':'Ramen', 'brunch':'Brunch & Café' };
+
+const getStars = r => '★'.repeat(Math.floor(r)) + (r%1>=0.5?'½':'');
+const fmtNum   = n => n>=1000?(n/1000).toFixed(1)+'k':n;
+
+const map = L.map('map', { center:[49.2820,-123.118], zoom:14, zoomControl:false });
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution:'&copy; OpenStreetMap contributors &copy; CARTO', maxZoom:19
+}).addTo(map);
+L.control.zoom({ position:'topright' }).addTo(map);
+
+const legend = L.control({ position:'bottomright' });
+legend.onAdd = function() {
+  const d = L.DomUtil.create('div','');
+  d.id = 'legend';
+  d.innerHTML = `<div class="legend-title">Categories</div>
+    <div class="legend-item"><div class="legend-dot ld-fine"></div>Fine Dining</div>
+    <div class="legend-item"><div class="legend-dot ld-ramen"></div>Ramen</div>
+    <div class="legend-item"><div class="legend-dot ld-brunch"></div>Brunch & Café</div>`;
+  return d;
+};
+legend.addTo(map);
+
+let markers = {}, activeFilter = 'all';
+
+function createIcon(cat, active=false) {
+  const s = active ? 36 : 30;
+  return L.divIcon({
+    className:'',
+    html:`<div class="custom-marker ${cat}" style="width:${s}px;height:${s}px;font-size:${active?15:12}px;">${categoryEmoji[cat]}</div>`,
+    iconSize:[s,s], iconAnchor:[s/2,s/2]
+  });
+}
+
+function buildPopup(r) {
+  return `<div class="popup-inner">
+    <div class="popup-eyebrow">${categoryLabel[r.category]}</div>
+    <div class="popup-name">${r.name}</div>
+    <div class="popup-meta">
+      <span class="stars">${getStars(r.rating)}</span>
+      <span class="rating-num">${r.rating}</span>
+      <span class="review-count">(${fmtNum(r.reviews)})</span>
+      <span class="price" style="margin-left:auto">${r.price}</span>
+    </div>
+    <div class="popup-divider"></div>
+    <div class="popup-address">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9a9080" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${r.address}
+    </div>
+    <div class="popup-hours">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9a9080" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${r.hours}
+    </div>
+    <div class="popup-review">"${r.snippet}"</div>
+  </div>`;
+}
+
+function setActive(id) {
+  document.querySelectorAll('.restaurant-item').forEach(el=>el.classList.remove('active'));
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if (el) { el.classList.add('active'); el.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+  Object.entries(markers).forEach(([mid,m]) => {
+    const r = restaurants.find(x=>x.id==mid);
+    if (r) m.setIcon(createIcon(r.category, mid==id));
+  });
+}
+
+function renderList(filter) {
+  const list = document.getElementById('restaurant-list');
+  const items = filter==='all' ? restaurants : restaurants.filter(r=>r.category===filter);
+  list.innerHTML = items.map(r=>`
+    <div class="restaurant-item" data-id="${r.id}">
+      <div class="item-top">
+        <div class="name">${r.name}</div>
+        <div class="category-pill pill-${r.category}">${categoryLabel[r.category]}</div>
+      </div>
+      <div class="meta">
+        <span class="stars">${getStars(r.rating)}</span>
+        <span class="rating-num">${r.rating}</span>
+        <span class="review-count">(${fmtNum(r.reviews)})</span>
+        <span class="price">${r.price}</span>
+      </div>
+      <div class="address">${r.address}</div>
+    </div>`).join('');
+  document.getElementById('visible-count').textContent = items.length;
+  list.querySelectorAll('.restaurant-item').forEach(el => {
+    el.addEventListener('click', ()=>{
+      const r = restaurants.find(x=>x.id==el.dataset.id);
+      if (r) { setActive(r.id); map.setView([r.lat,r.lng],16,{animate:true}); markers[r.id].openPopup(); }
+    });
+  });
+}
+
+function renderMarkers(filter) {
+  Object.values(markers).forEach(m=>map.removeLayer(m));
+  markers = {};
+  const items = filter==='all' ? restaurants : restaurants.filter(r=>r.category===filter);
+  items.forEach(r=>{
+    const m = L.marker([r.lat,r.lng],{icon:createIcon(r.category)}).addTo(map);
+    m.bindPopup(buildPopup(r),{maxWidth:300});
+    m.on('click',()=>setActive(r.id));
+    markers[r.id]=m;
+  });
+}
+
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    renderList(activeFilter);
+    renderMarkers(activeFilter);
+  });
+});
+
+renderList('all');
+renderMarkers('all');
+</script>
+</body>
+</html>
