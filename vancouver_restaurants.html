@@ -575,27 +575,138 @@ window.addEventListener('scroll', () => {
   document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 60);
 });
 
-const restaurants = [
-  { id:1,  name:"Honeybrew Bar and Bistro",    category:"fine-dining", lat:49.2777645, lng:-123.1268778, rating:4.6, price:"$$$", address:"785 Davie St, Vancouver",       hours:"Tue–Fri: 11:30AM–1:30PM & 5:30–10PM",               snippet:"The cocktails were extremely well crafted, the service was great and the food was mind expanding." },
-  { id:2,  name:"Nightingale",                 category:"fine-dining", lat:49.2873977, lng:-123.1174750, rating:4.5, price:"$$$", address:"1017 W Hastings St, Vancouver",    hours:"Daily 11:30AM–11PM",                                  snippet:"The lasagna was absolutely amazing — a must-try. Perfect for sharing dishes with wine." },
-  { id:3,  name:"Cardero's Restaurant",        category:"fine-dining", lat:49.2916101, lng:-123.1274816, rating:4.5, price:"$$$", address:"1583 Coal Harbour Quay, Vancouver", hours:"Mon–Thu: 11:30AM–10:30PM · Fri–Sat: until 11:30PM",  snippet:"A window seat with a beautiful view of Coal Harbour. The Sablefish was SOOOO tender!" },
-  { id:4,  name:"Chambar Restaurant",          category:"fine-dining", lat:49.2801271, lng:-123.1099350, rating:4.5, price:"$$$", address:"568 Beatty St, Vancouver",         hours:"Mon–Wed: 4:30–10PM · Thu–Fri: 4:30–11PM",           snippet:"Belgian-inspired fine dining with amazing creative drink options and a stunning brick interior." },
-  { id:5,  name:"Riley's Vancouver",           category:"fine-dining", lat:49.2879155, lng:-123.1152660, rating:4.7, price:"$$$", address:"200 Burrard St, Vancouver",        hours:"Mon–Thu: 11:30AM–10PM · Sat–Sun: 10:30AM–11PM",     snippet:"The brioche bread with whipped butter and lobster oil is hands-down the best thing on the menu." },
-  { id:6,  name:"Glowbal",                     category:"fine-dining", lat:49.2815314, lng:-123.1173984, rating:4.6, price:"$$$", address:"590 W Georgia St, Vancouver",      hours:"Mon–Thu: 11:30AM–10PM · Sat–Sun: 10:30AM–11PM",     snippet:"Every dish was beautifully presented and packed with flavour — consistency and care throughout." },
-  { id:7,  name:"Joe Fortes Seafood & Chop",   category:"fine-dining", lat:49.2849486, lng:-123.1245531, rating:4.5, price:"$$$", address:"777 Thurlow St, Vancouver",        hours:"Daily 11AM–11PM",                                    snippet:"The oysters were divine. Service was top notch — crew kept water and wine refilled all evening!" },
-  { id:8,  name:"Osteria Savio Volpe",         category:"fine-dining", lat:49.2574425, lng:-123.0909434, rating:4.6, price:"$$$", address:"615 Kingsway, Vancouver",          hours:"Daily 5–10:30PM",                                    snippet:"The pasta was a standout: perfectly folded, silky, in a rich savoury sauce. Best Italian in town." },
-  { id:9,  name:"Ramen Danbo Robson",          category:"ramen",       lat:49.2874757, lng:-123.1289899, rating:4.6, price:"$",   address:"1333 Robson St, Vancouver",        hours:"Daily 11AM–11PM",                                    snippet:"Rich, flavourful and perfectly customizable. Great depth of broth with ideal noodle texture." },
-  { id:10, name:"Tonkotsu Ramen Tsukiya",      category:"ramen",       lat:49.2918299, lng:-123.1345432, rating:4.8, price:"$",   address:"740 Denman St, Vancouver",         hours:"Mon–Tue, Fri–Sun: 11:30AM–8:30PM",                   snippet:"OUTSTANDING ramen!! Deep, rich and layered broth. Everything thereafter was absolutely perfect." },
-  { id:11, name:"Maruhachi Ra-men Westend",    category:"ramen",       lat:49.2905771, lng:-123.1333700, rating:4.6, price:"$",   address:"780 Bidwell St, Vancouver",        hours:"Mon–Thu, Sat–Sun: 11:30AM–9:30PM",                   snippet:"Authentic Japanese ramen. Broth was thick and well flavored. Noodle texture was perfect." },
-  { id:12, name:"JINYA Ramen Bar",             category:"ramen",       lat:49.2803152, lng:-123.1179336, rating:4.4, price:"$$",  address:"541 Robson St, Vancouver",         hours:"Mon–Thu: 11AM–10PM · Fri–Sat: until 11PM",           snippet:"The JINYA Tonkotsu Black was simply excellent. Rich, deep broth with slow-cooked pork flavour." },
-  { id:13, name:"Afuri Vancouver",             category:"ramen",       lat:49.2600837, lng:-123.1013162, rating:4.5, price:"$$",  address:"2801 Main St, Vancouver",          hours:"Mon–Thu, Sun: 11:30AM–9:30PM · Fri–Sat: until 10:30PM", snippet:"Lovely, spacious and bright. The lunch combo special is such an incredible deal!" },
-  { id:14, name:"Menya Raizo by Zakkushi",     category:"ramen",       lat:49.2633411, lng:-123.1131008, rating:4.4, price:"$$",  address:"401 W Broadway, Vancouver",        hours:"Mon–Thu, Sat–Sun: 11AM–9PM · Fri: Closed",           snippet:"One of the tastiest broths I've tried. Lanterns, noren curtains — truly feels like Japan." },
-  { id:15, name:"Cafe Medina",                 category:"brunch",      lat:49.2804485, lng:-123.1168982, rating:4.5, price:"$$",  address:"780 Richards St, Vancouver",       hours:"Mon–Fri: 8AM–3PM · Sat–Sun: 9AM–3PM",               snippet:"Mediterranean-inspired brunch. The Belgian waffles and fricassée are absolutely iconic." },
-  { id:16, name:"Twisted Fork",                category:"brunch",      lat:49.2831834, lng:-123.1044482, rating:4.5, price:"$$",  address:"213 Carrall St, Vancouver",        hours:"Wed–Sun: 9AM–2PM · Mon–Tue: Closed",                 snippet:"Quirky decor, amazing house made sourdough and hot sauce. A truly unique brunch spot." },
-  { id:17, name:"Jam Cafe",                    category:"brunch",      lat:49.2802619, lng:-123.1096419, rating:4.5, price:"$$",  address:"556 Beatty St, Vancouver",         hours:"Mon–Fri: 8AM–2:30PM · Sat–Sun: 8AM–3PM",            snippet:"The fried chicken French toast — hot honey, spicy sour cream, maple bbq sauce — is pure perfection." },
-  { id:18, name:"Brunch Vancouver",            category:"brunch",      lat:49.2778708, lng:-123.1256128, rating:4.7, price:"$$",  address:"1147 Granville St, Vancouver",     hours:"Daily 8:30AM–3PM",                                   snippet:"Solid Mexican-inspired brunch without the massive wait times. Enchiladas are a must." },
-  { id:19, name:"Craffles",                    category:"brunch",      lat:49.2759437, lng:-123.1247047, rating:4.7, price:"$$",  address:"518 Davie St, Vancouver",          hours:"Daily 8AM–4PM",                                      snippet:"The French toast is hands-down the best I've ever had — with a dedicated vegan menu too." }
-];
+<script>
+  let restaurants = [];
+
+  // Fetch data from the PHP API
+  fetch('api/restaurants.php')
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        console.error('Error fetching data:', data.error);
+        return;
+      }
+      restaurants = data; // Assign the fetched data to the restaurants array
+      renderList('all'); // Render the list
+      renderMarkers('all'); // Render the markers
+    })
+    .catch(error => console.error('Error fetching restaurants:', error));
+
+  const categoryColors = { 'fine-dining':'#b85c38', 'ramen':'#d4813a', 'brunch':'#6b8c72' };
+  const categoryEmoji  = { 'fine-dining':'🍽', 'ramen':'🍜', 'brunch':'☕' };
+  const categoryLabel  = { 'fine-dining':'Fine Dining', 'ramen':'Ramen', 'brunch':'Brunch & Café' };
+
+  const getStars = r => '★'.repeat(Math.floor(r)) + (r%1>=0.5?'½':'');
+  const fmtNum   = n => n>=1000?(n/1000).toFixed(1)+'k':n;
+
+  const map = L.map('map', { center:[49.2820,-123.118], zoom:14, zoomControl:false });
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution:'&copy; OpenStreetMap contributors &copy; CARTO', maxZoom:19
+  }).addTo(map);
+  L.control.zoom({ position:'topright' }).addTo(map);
+
+  const legend = L.control({ position:'bottomright' });
+  legend.onAdd = function() {
+    const d = L.DomUtil.create('div','');
+    d.id = 'legend';
+    d.innerHTML = `<div class="legend-title">Categories</div>
+      <div class="legend-item"><div class="legend-dot ld-fine"></div>Fine Dining</div>
+      <div class="legend-item"><div class="legend-dot ld-ramen"></div>Ramen</div>
+      <div class="legend-item"><div class="legend-dot ld-brunch"></div>Brunch & Café</div>`;
+    return d;
+  };
+  legend.addTo(map);
+
+  let markers = {}, activeFilter = 'all';
+
+  function createIcon(cat, active=false) {
+    const s = active ? 36 : 30;
+    return L.divIcon({
+      className:'',
+      html:`<div class="custom-marker ${cat}" style="width:${s}px;height:${s}px;font-size:${active?15:12}px;">${categoryEmoji[cat]}</div>`,
+      iconSize:[s,s], iconAnchor:[s/2,s/2]
+    });
+  }
+
+  function buildPopup(r) {
+    return `<div class="popup-inner">
+      <div class="popup-eyebrow">${categoryLabel[r.category]}</div>
+      <div class="popup-name">${r.name}</div>
+      <div class="popup-meta">
+        <span class="stars">${getStars(r.rating)}</span>
+        <span class="rating-num">${r.rating}</span>
+        <span class="review-count">(${fmtNum(r.reviews)})</span>
+        <span class="price" style="margin-left:auto">${r.price}</span>
+      </div>
+      <div class="popup-divider"></div>
+      <div class="popup-address">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9a9080" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${r.address}
+      </div>
+      <div class="popup-hours">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9a9080" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${r.hours}
+      </div>
+      <div class="popup-review">"${r.snippet}"</div>
+    </div>`;
+  }
+
+  function setActive(id) {
+    document.querySelectorAll('.restaurant-item').forEach(el=>el.classList.remove('active'));
+    const el = document.querySelector(`[data-id="${id}"]`);
+    if (el) { el.classList.add('active'); el.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+    Object.entries(markers).forEach(([mid,m]) => {
+      const r = restaurants.find(x=>x.id==mid);
+      if (r) m.setIcon(createIcon(r.category, mid==id));
+    });
+  }
+
+  function renderList(filter) {
+    const list = document.getElementById('restaurant-list');
+    const items = filter==='all' ? restaurants : restaurants.filter(r=>r.category===filter);
+    list.innerHTML = items.map(r=>`
+      <div class="restaurant-item" data-id="${r.id}">
+        <div class="item-top">
+          <div class="name">${r.name}</div>
+          <div class="category-pill pill-${r.category}">${categoryLabel[r.category]}</div>
+        </div>
+        <div class="meta">
+          <span class="stars">${getStars(r.rating)}</span>
+          <span class="rating-num">${r.rating}</span>
+          <span class="review-count">(${fmtNum(r.reviews)})</span>
+          <span class="price">${r.price}</span>
+        </div>
+        <div class="address">${r.address}</div>
+      </div>`).join('');
+    document.getElementById('visible-count').textContent = items.length;
+    list.querySelectorAll('.restaurant-item').forEach(el => {
+      el.addEventListener('click', ()=>{
+        const r = restaurants.find(x=>x.id==el.dataset.id);
+        if (r) { setActive(r.id); map.setView([r.lat,r.lng],16,{animate:true}); markers[r.id].openPopup(); }
+      });
+    });
+  }
+
+  function renderMarkers(filter) {
+    Object.values(markers).forEach(m=>map.removeLayer(m));
+    markers = {};
+    const items = filter==='all' ? restaurants : restaurants.filter(r=>r.category===filter);
+    items.forEach(r=>{
+      const m = L.marker([r.lat,r.lng],{icon:createIcon(r.category)}).addTo(map);
+      m.bindPopup(buildPopup(r),{maxWidth:300});
+      m.on('click',()=>setActive(r.id));
+      markers[r.id]=m;
+    });
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      renderList(activeFilter);
+      renderMarkers(activeFilter);
+    });
+  });
+</script>
 
 const categoryColors = { 'fine-dining':'#b85c38', 'ramen':'#d4813a', 'brunch':'#6b8c72' };
 const categoryEmoji  = { 'fine-dining':'🍽', 'ramen':'🍜', 'brunch':'☕' };

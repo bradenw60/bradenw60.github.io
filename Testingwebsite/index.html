@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vancouver — Curated Dining Guide</title>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── TOKENS ─── */
+    :root {
+      --ink:        #1a1814;
+      --parchment:  #f5f0e8;
+      --warm-white: #faf7f2;
+      --gold:       #b8962e;
+      --gold-light: #d4af55;
+      --gold-dark:  #8a6e1e;
+      --muted:      #6b6455;
+      --rule:       #ddd5c0;
+      --panel-w:    360px;
+      --card-bg:    rgba(245,240,232,0.97);
+
+      /* Category colours — must match ArcGIS symbology in generate_mxd.py */
+      --c-fine:     #8B4513;
+      --c-seafood:  #1E90FF;
+      --c-casual:   #3CB371;
+      --c-asian:    #FF8C00;
+      --c-european: #9370DB;
+      --c-bar:      #DC143C;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Jost', sans-serif;
+      background: var(--warm-white);
+      color: var(--ink);
+      overflow: hidden;
+    }
+
+    /* ─── LAYOUT ─── */
+    #app {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ─── SIDE PANEL ─── */
+    #panel {
+      width: var(--panel-w);
+      min-width: var(--panel-w);
+      background: var(--warm-white);
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    /* Header */
+    #panel-header {
+      padding: 28px 28px 20px;
+      border-bottom: 1px solid var(--rule);
+      flex-shrink: 0;
+    }
+
+    .eyebrow {
+      font-size: 9px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .panel-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 26px;
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--ink);
+    }
+
+    .panel-title em {
+      font-style: italic;
+      color: var(--gold-dark);
+    }
+
+    .panel-subtitle {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 300;
+      letter-spacing: .04em;
+    }
+
+    /* Filter bar */
+    #filter-bar {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--rule);
+      flex-shrink: 0;
+    }
+
+    .filter-label {
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .chip {
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--rule);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: .05em;
+      cursor: pointer;
+      background: transparent;
+      color: var(--muted);
+      transition: all .2s;
+    }
+
+    .chip:hover { border-color: var(--gold); color: var(--gold); }
+    .chip.active { background: var(--gold); border-color: var(--gold); color: #fff; }
+
+    /* Search */
+    #search-wrap {
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--rule);
+      flex-shrink: 0;
+    }
+
+    #search {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      background: var(--parchment);
+      font-family: 'Jost', sans-serif;
+      font-size: 12px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    #search:focus { border-color: var(--gold); }
+    #search::placeholder { color: var(--muted); }
+
+    /* Restaurant list */
+    #list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+
+    #list::-webkit-scrollbar { width: 4px; }
+    #list::-webkit-scrollbar-track { background: transparent; }
+    #list::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
+
+    .list-item {
+      padding: 12px 20px;
+      cursor: pointer;
+      border-bottom: 1px solid transparent;
+      transition: background .15s;
+      position: relative;
+    }
+
+    .list-item:hover { background: var(--parchment); }
+    .list-item.active { background: var(--parchment); border-left: 3px solid var(--gold); padding-left: 17px; }
+
+    .item-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .item-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    .item-price {
+      font-size: 11px;
+      color: var(--gold-dark);
+      white-space: nowrap;
+      font-weight: 400;
+    }
+
+    .item-meta {
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cat-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .item-cuisine {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .04em;
+    }
+
+    .item-walk {
+      margin-left: auto;
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* Count */
+    #count-bar {
+      padding: 8px 20px;
+      border-top: 1px solid var(--rule);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .05em;
+      flex-shrink: 0;
+    }
+
+    /* ─── MAP ─── */
+    #map {
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Leaflet overrides */
+    .leaflet-container { background: #e8e0d4; }
+    .leaflet-control-attribution { font-size: 9px; }
+
+    /* ─── POPUP ─── */
+    .leaflet-popup-content-wrapper {
+      background: var(--warm-white);
+      border: none;
+      border-radius: 0;
+      box-shadow: 0 8px 40px rgba(0,0,0,.18), 0 2px 8px rgba(0,0,0,.1);
+      padding: 0;
+      overflow: hidden;
+      min-width: 280px;
+      max-width: 320px;
+    }
+
+    .leaflet-popup-tip-container { display: none; }
+    .leaflet-popup-content { margin: 0; }
+
+    .popup-header {
+      background: var(--ink);
+      color: var(--gold-light);
+      padding: 14px 18px 12px;
+    }
+
+    .popup-eyebrow {
+      font-size: 8.5px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: rgba(212,175,85,.65);
+      margin-bottom: 4px;
+    }
+
+    .popup-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--gold-light);
+    }
+
+    .popup-body { padding: 14px 18px; }
+
+    .popup-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 7px;
+      font-size: 11.5px;
+      color: var(--ink);
+    }
+
+    .popup-icon {
+      width: 14px;
+      text-align: center;
+      color: var(--gold-dark);
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-size: 12px;
+    }
+
+    .popup-notes {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--rule);
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-style: italic;
+    }
+
+    .popup-tags {
+      margin-top: 9px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .popup-tag {
+      background: var(--parchment);
+      border: 1px solid var(--rule);
+      border-radius: 3px;
+      padding: 2px 7px;
+      font-size: 9.5px;
+      color: var(--muted);
+      letter-spacing: .04em;
+    }
+
+    .popup-link {
+      display: block;
+      margin-top: 12px;
+      text-align: center;
+      padding: 8px;
+      background: var(--gold);
+      color: #fff;
+      text-decoration: none;
+      font-size: 10px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: background .2s;
+    }
+
+    .popup-link:hover { background: var(--gold-dark); }
+
+    /* ─── MAP LEGEND ─── */
+    #legend {
+      position: absolute;
+      bottom: 24px;
+      right: 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--rule);
+      padding: 12px 14px;
+      z-index: 1000;
+      font-size: 10px;
+      pointer-events: none;
+      min-width: 140px;
+    }
+
+    .legend-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 12px;
+      margin-bottom: 8px;
+      color: var(--ink);
+      letter-spacing: .08em;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 5px;
+      color: var(--muted);
+    }
+
+    .legend-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,.6);
+      flex-shrink: 0;
+    }
+
+    /* ─── CUSTOM MARKERS ─── */
+    .custom-marker {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2.5px solid rgba(255,255,255,0.85);
+      box-shadow: 0 2px 8px rgba(0,0,0,.3);
+      cursor: pointer;
+      transition: transform .15s;
+    }
+
+    .custom-marker:hover { transform: scale(1.3); }
+
+    /* ─── LOADING ─── */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: var(--warm-white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity .5s;
+    }
+
+    .loader-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 300;
+      color: var(--ink);
+      letter-spacing: .1em;
+    }
+
+    .loader-sub {
+      margin-top: 6px;
+      font-size: 11px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .loader-line {
+      margin-top: 28px;
+      width: 60px;
+      height: 1px;
+      background: var(--rule);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .loader-line::after {
+      content: '';
+      position: absolute;
+      left: -100%;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gold);
+      animation: slide 1s ease-in-out infinite;
+    }
+
+    @keyframes slide { to { left: 100%; } }
+
+    /* ─── MOBILE fallback ─── */
+    @media (max-width: 700px) {
+      #app { flex-direction: column; }
+      #panel { width: 100%; min-width: unset; max-height: 45vh; border-right: none; border-bottom: 1px solid var(--rule); }
+      #map { height: 55vh; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading screen -->
+<div id="loader">
+  <div class="loader-title">Vancouver</div>
+  <div class="loader-sub">Curated Dining Guide</div>
+  <div class="loader-line"></div>
+</div>
+
+<div id="app">
+  <!-- ── SIDE PANEL ── -->
+  <aside id="panel">
+    <div id="panel-header">
+      <div class="eyebrow">Concierge Selection</div>
+      <h1 class="panel-title">Vancouver<br><em>Dining Guide</em></h1>
+      <p class="panel-subtitle">Our curated collection of exceptional restaurants within the city.</p>
+    </div>
+
+    <div id="filter-bar">
+      <div class="filter-label">Category</div>
+      <div class="filter-chips" id="chips"></div>
+    </div>
+
+    <div id="search-wrap">
+      <input id="search" type="text" placeholder="Search by name, cuisine, or tag…" autocomplete="off" />
+    </div>
+
+    <div id="list"></div>
+
+    <div id="count-bar"><span id="count-text">Loading…</span></div>
+  </aside>
+
+  <!-- ── MAP ── -->
+  <main id="map"></main>
+
+  <!-- ── LEGEND ── -->
+  <div id="legend">
+    <div class="legend-title">Categories</div>
+    <div id="legend-rows"></div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// CONFIG
+// ─────────────────────────────────────────────
+const GEOJSON_URL = 'data/restaurants.geojson';
+
+// Must match ArcGIS generate_mxd.py CATEGORY_COLOURS
+const CATEGORY_COLORS = {
+  'Fine Dining':    '#8B4513',
+  'Seafood & Sushi':'#1E90FF',
+  'Casual Fine':    '#3CB371',
+  'Asian':          '#FF8C00',
+  'European':       '#9370DB',
+  'Bar & Lounge':   '#DC143C',
+};
+const DEFAULT_COLOR = '#888';
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let allFeatures   = [];
+let markers       = {};       // id → Leaflet marker
+let activeFilter  = 'All';
+let searchQuery   = '';
+let activeId      = null;
+
+// ─────────────────────────────────────────────
+// MAP INIT
+// ─────────────────────────────────────────────
+const map = L.map('map', {
+  center: [49.282, -123.122],
+  zoom: 14,
+  zoomControl: false,
+});
+
+L.control.zoom({ position: 'topright' }).addTo(map);
+
+// Stadia Alidade Smooth (warm, elegant basemap — no API key needed)
+L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+  attribution: '© <a href="https://stadiamaps.com/">Stadia Maps</a>, © <a href="https://openmaptiles.org/">OpenMapTiles</a>, © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom: 20,
+}).addTo(map);
+
+// ─────────────────────────────────────────────
+// MARKER FACTORY
+// ─────────────────────────────────────────────
+function makeIcon(color) {
+  return L.divIcon({
+    className: '',
+    html: `<div class="custom-marker" style="background:${color}"></div>`,
+    iconSize:   [22, 22],
+    iconAnchor: [11, 11],
+  });
+}
+
+// ─────────────────────────────────────────────
+// POPUP CONTENT
+// ─────────────────────────────────────────────
+function buildPopup(p) {
+  const tags = (p.tags || []).map(t => `<span class="popup-tag">${t}</span>`).join('');
+  const stars = '★'.repeat(Math.round(p.rating)) + '☆'.repeat(5 - Math.round(p.rating));
+  return `
+    <div class="popup-header">
+      <div class="popup-eyebrow">${p.category} &middot; ${p.price}</div>
+      <div class="popup-name">${p.name}</div>
+    </div>
+    <div class="popup-body">
+      <div class="popup-row"><span class="popup-icon">🍴</span>${p.cuisine}</div>
+      <div class="popup-row"><span class="popup-icon">📍</span>${p.address}</div>
+      <div class="popup-row"><span class="popup-icon">⏰</span>${p.hours}</div>
+      <div class="popup-row"><span class="popup-icon">☎</span>${p.phone}</div>
+      <div class="popup-row"><span class="popup-icon">⭐</span>${p.rating} / 5.0 &nbsp;<span style="color:#b8962e;font-size:11px">${stars}</span></div>
+      <div class="popup-row"><span class="popup-icon">🚶</span>~${p.walk_minutes} min walk from hotel</div>
+      <div class="popup-notes">${p.notes}</div>
+      ${tags ? `<div class="popup-tags">${tags}</div>` : ''}
+      ${p.website ? `<a class="popup-link" href="${p.website}" target="_blank" rel="noopener">Visit Website →</a>` : ''}
+    </div>`;
+}
+
+// ─────────────────────────────────────────────
+// RENDER LIST
+// ─────────────────────────────────────────────
+function categoryColor(cat) {
+  return CATEGORY_COLORS[cat] || DEFAULT_COLOR;
+}
+
+function renderList(features) {
+  const list = document.getElementById('list');
+  list.innerHTML = '';
+  features.forEach(feat => {
+    const p    = feat.properties;
+    const div  = document.createElement('div');
+    div.className = 'list-item' + (p.id === activeId ? ' active' : '');
+    div.dataset.id = p.id;
+    div.innerHTML = `
+      <div class="item-top">
+        <span class="item-name">${p.name}</span>
+        <span class="item-price">${p.price}</span>
+      </div>
+      <div class="item-meta">
+        <span class="cat-dot" style="background:${categoryColor(p.category)}"></span>
+        <span class="item-cuisine">${p.cuisine}</span>
+        <span class="item-walk">🚶 ${p.walk_minutes}m</span>
+      </div>`;
+    div.addEventListener('click', () => selectItem(p.id));
+    list.appendChild(div);
+  });
+  document.getElementById('count-text').textContent =
+    `${features.length} of ${allFeatures.length} restaurant${features.length !== 1 ? 's' : ''}`;
+}
+
+// ─────────────────────────────────────────────
+// FILTER / SEARCH
+// ─────────────────────────────────────────────
+function getFiltered() {
+  return allFeatures.filter(f => {
+    const p = f.properties;
+    const catOk = activeFilter === 'All' || p.category === activeFilter;
+    const q     = searchQuery.toLowerCase();
+    const searchOk = !q ||
+      p.name.toLowerCase().includes(q) ||
+      p.cuisine.toLowerCase().includes(q) ||
+      (p.tags || []).some(t => t.toLowerCase().includes(q)) ||
+      p.category.toLowerCase().includes(q);
+    return catOk && searchOk;
+  });
+}
+
+function applyFilter() {
+  const filtered = getFiltered();
+  const ids      = new Set(filtered.map(f => f.properties.id));
+
+  // Show/hide markers
+  allFeatures.forEach(f => {
+    const m = markers[f.properties.id];
+    if (!m) return;
+    if (ids.has(f.properties.id)) {
+      if (!map.hasLayer(m)) map.addLayer(m);
+    } else {
+      if (map.hasLayer(m)) map.removeLayer(m);
+    }
+  });
+
+  renderList(filtered);
+}
+
+// ─────────────────────────────────────────────
+// SELECTION
+// ─────────────────────────────────────────────
+function selectItem(id) {
+  activeId = id;
+  const feat = allFeatures.find(f => f.properties.id === id);
+  if (!feat) return;
+
+  // Highlight list item
+  document.querySelectorAll('.list-item').forEach(el => {
+    el.classList.toggle('active', +el.dataset.id === id);
+    if (+el.dataset.id === id) el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  });
+
+  // Pan map & open popup
+  const [lng, lat] = feat.geometry.coordinates;
+  map.flyTo([lat, lng], Math.max(map.getZoom(), 15), { duration: .7 });
+  markers[id].openPopup();
+}
+
+// ─────────────────────────────────────────────
+// BUILD CHIPS + LEGEND
+// ─────────────────────────────────────────────
+function buildChipsAndLegend(features) {
+  const cats = ['All', ...new Set(features.map(f => f.properties.category))];
+
+  const chipsEl  = document.getElementById('chips');
+  const legendEl = document.getElementById('legend-rows');
+
+  cats.forEach(cat => {
+    const chip = document.createElement('button');
+    chip.className = 'chip' + (cat === 'All' ? ' active' : '');
+    chip.textContent = cat;
+    chip.addEventListener('click', () => {
+      activeFilter = cat;
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      applyFilter();
+    });
+    chipsEl.appendChild(chip);
+  });
+
+  // Legend (skip 'All')
+  cats.slice(1).forEach(cat => {
+    const row = document.createElement('div');
+    row.className = 'legend-row';
+    row.innerHTML = `<span class="legend-dot" style="background:${categoryColor(cat)}"></span>${cat}`;
+    legendEl.appendChild(row);
+  });
+}
+
+// ─────────────────────────────────────────────
+// LOAD DATA
+// ─────────────────────────────────────────────
+async function loadData() {
+  let data;
+  try {
+    const resp = await fetch(GEOJSON_URL);
+    if (!resp.ok) throw new Error(resp.statusText);
+    data = await resp.json();
+  } catch (e) {
+    // Fallback for local file:// protocol (open via a local web server)
+    document.getElementById('loader').innerHTML =
+      `<div style="font-family:Georgia;text-align:center;color:#8a6e1e;padding:40px">
+        <h2 style="font-size:22px;margin-bottom:12px">Serve via a local web server</h2>
+        <p style="font-size:13px;color:#6b6455;max-width:400px">
+          Browsers block local file fetches.<br><br>
+          Run: <code style="background:#f0ebe0;padding:2px 6px;border-radius:3px">
+          python -m http.server 8000</code><br>
+          then open <strong>http://localhost:8000</strong>
+        </p>
+      </div>`;
+    return;
+  }
+
+  allFeatures = data.features;
+  buildChipsAndLegend(allFeatures);
+
+  // Place markers
+  allFeatures.forEach(feat => {
+    const p     = feat.properties;
+    const color = categoryColor(p.category);
+    const [lng, lat] = feat.geometry.coordinates;
+    const marker = L.marker([lat, lng], { icon: makeIcon(color) })
+      .bindPopup(buildPopup(p), {
+        maxWidth: 320,
+        minWidth: 280,
+        className: '',
+        closeButton: true,
+      })
+      .on('click', () => selectItem(p.id))
+      .addTo(map);
+    markers[p.id] = marker;
+  });
+
+  renderList(allFeatures);
+
+  // Fade out loader
+  const loader = document.getElementById('loader');
+  loader.style.opacity = '0';
+  loader.style.pointerEvents = 'none';
+  setTimeout(() => loader.remove(), 600);
+}
+
+// ─────────────────────────────────────────────
+// SEARCH
+// ─────────────────────────────────────────────
+document.getElementById('search').addEventListener('input', e => {
+  searchQuery = e.target.value;
+  applyFilter();
+});
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>
